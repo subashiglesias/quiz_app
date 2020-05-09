@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:quizapp/question.dart';
 
 void main() => runApp(QuizApp());
 
@@ -25,15 +26,21 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Widget> scoreKeeper = [];
 
-  List<String> questions = [
+  static List<String> questions = [
     'You can lead a cow down stairs but not up stairs.',
     'Approximately one quarter of human bones are in the feet.',
     'A slug\'s blood is green.'
   ];
 
-  List<bool> answers = [false, true, true];
+  static List<bool> answers = [false, true, true];
 
   int questionNumber = 0;
+
+  List<Question> questionBank = [
+    Question(question: questions[0], answer: answers[0]),
+    Question(question: questions[1], answer: answers[1]),
+    Question(question: questions[2], answer: answers[2]),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +54,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: const EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questions[questionNumber],
+                questionBank[questionNumber].questionText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -71,7 +78,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                if (true == answers[questionNumber]) {
+                if (true == questionBank[questionNumber].questionAnswer) {
                   setState(() {
                     scoreKeeper.add(correctIcon());
                   });
@@ -99,7 +106,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                if (false == answers[questionNumber]) {
+                if (false == questionBank[questionNumber].questionAnswer) {
                   setState(() {
                     scoreKeeper.add(correctIcon());
                   });
