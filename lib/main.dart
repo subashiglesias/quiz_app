@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:quizapp/question.dart';
+
+import 'quiz_brain.dart';
+
+QuizBrain quizBrain = new QuizBrain();
 
 void main() => runApp(QuizApp());
 
@@ -26,22 +29,6 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Widget> scoreKeeper = [];
 
-  static List<String> questions = [
-    'You can lead a cow down stairs but not up stairs.',
-    'Approximately one quarter of human bones are in the feet.',
-    'A slug\'s blood is green.'
-  ];
-
-  static List<bool> answers = [false, true, true];
-
-  int questionNumber = 0;
-
-  List<Question> questionBank = [
-    Question(question: questions[0], answer: answers[0]),
-    Question(question: questions[1], answer: answers[1]),
-    Question(question: questions[2], answer: answers[2]),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -54,7 +41,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: const EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questionBank[questionNumber].questionText,
+                quizBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -78,16 +65,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                if (true == questionBank[questionNumber].questionAnswer) {
-                  setState(() {
-                    scoreKeeper.add(correctIcon());
-                  });
-                } else {
-                  setState(() {
-                    scoreKeeper.add(wrongIcon());
-                  });
-                }
-                if (questionNumber < 2) questionNumber++;
+                answerCheck(true);
               },
             ),
           ),
@@ -106,16 +84,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                if (false == questionBank[questionNumber].questionAnswer) {
-                  setState(() {
-                    scoreKeeper.add(correctIcon());
-                  });
-                } else {
-                  setState(() {
-                    scoreKeeper.add(wrongIcon());
-                  });
-                }
-                if (questionNumber < 2) questionNumber++;
+                answerCheck(false);
               },
             ),
           ),
@@ -125,6 +94,21 @@ class _QuizPageState extends State<QuizPage> {
         )
       ],
     );
+  }
+
+  answerCheck(bool answer) {
+    print("User selected " + answer.toString());
+    print("Correct answer is " + quizBrain.getQuestionAnswer().toString());
+    if (answer == quizBrain.getQuestionAnswer()) {
+      setState(() {
+        scoreKeeper.add(correctIcon());
+      });
+    } else {
+      setState(() {
+        scoreKeeper.add(wrongIcon());
+      });
+    }
+    quizBrain.nextQuestion();
   }
 }
 
